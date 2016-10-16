@@ -25,14 +25,62 @@ open class TestMe {
 //
 public struct Money {
   public var amount : Int
-  public var currency : String
-  
+  public var currency : String {
+    return _currency.rawValue
+  }
+  private var _currency : Currency
+
+  public enum Currency : String {
+    case CAN = "CAN"
+    case EUR = "EUR"
+    case GBP = "GBP"
+    case USD = "USD"
+
+    public func exchangeRate() -> Double {
+      switch self {
+      case .CAN: return 1.25
+      case .EUR: return 1.5
+      case .GBP: return 0.5
+      case .USD: return 1
+      }
+    }
+  }
+
+  init!(amount: Int, currency: String) {
+    guard let myCurrency = Currency(rawValue: currency) else {
+      print("init failed: unrecognized currency '\(currency)'")
+      return nil
+    }
+
+    self.amount = amount
+    self._currency = myCurrency
+  }
+
   public func convert(_ to: String) -> Money {
+    guard let toCurr = Currency(rawValue: to) else {
+      print("target currency '\(to)' unrecognized")
+      return self
+    }
+
+    return convert(toCurr)
   }
   
   public func add(_ to: Money) -> Money {
+    let newAmount = to.amount + self.convert(to._currency).amount
+
+    return Money(amount: newAmount, currency: to.currency)
   }
+
   public func subtract(_ from: Money) -> Money {
+    let newAmount = from.amount - self.convert(from._currency).amount
+
+    return Money(amount: newAmount, currency: from.currency)
+  }
+
+  private func convert(_ to: Currency) -> Money {
+    let newAmount = (Double(amount) / _currency.exchangeRate()) * to.exchangeRate()
+
+    return Money(amount: Int(newAmount), currency: to.rawValue)
   }
 }
 
@@ -105,8 +153,6 @@ open class Family {
   open func householdIncome() -> Int {
   }
 }
-
-
 
 
 
