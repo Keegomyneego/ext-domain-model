@@ -166,15 +166,35 @@ open class Person {
 // Family
 //
 open class Family {
+  private static let legalAge = 21
+
+  private let spouses: [Person] = []
   fileprivate var members : [Person] = []
-  
-  public init(spouse1: Person, spouse2: Person) {
+
+  public init!(spouse1: Person, spouse2: Person) {
+    guard spouse1.spouse == nil && spouse2.spouse == nil else {
+      print("both spouses must be unmarried before creating a family")
+      return nil
+    }
+
+    spouse1.spouse = spouse2
+    spouse2.spouse = spouse1
+    members = [spouse1, spouse2]
   }
   
   open func haveChild(_ child: Person) -> Bool {
+    let spousesAreOfLegalAge = spouses.reduce(true, { $0 && ($1.age >= Family.legalAge) })
+
+    if spousesAreOfLegalAge {
+      members.append(child)
+      return true
+    } else {
+      return false
+    }
   }
   
   open func householdIncome() -> Int {
+    return members.reduce(0, { $0 + ($1.job?.calculateIncome(2000) ?? 0) })
   }
 }
 
