@@ -46,14 +46,9 @@ public struct Money {
     }
   }
 
-  init!(amount: Int, currency: String) {
-    guard let myCurrency = Currency(rawValue: currency) else {
-      print("init failed: unrecognized currency '\(currency)'")
-      return nil
-    }
-
+  init(amount: Int, currency: String) {
     self.amount = amount
-    self._currency = myCurrency
+    self._currency = Currency(rawValue: currency)!
   }
 
   public func convert(_ to: String) -> Money {
@@ -113,9 +108,9 @@ open class Job {
   open func raise(_ amt : Double) {
     switch self.type {
     case .Hourly(let hourlyIncome):
-      self.type = .Hourly(hourlyIncome * (1.0 + amt))
+      self.type = .Hourly(hourlyIncome + amt)
     case .Salary(let annualIncome):
-      self.type = .Salary(Int(Double(annualIncome) * (1.0 + amt)))
+      self.type = .Salary(Int(Double(annualIncome) + amt))
     }
   }
 }
@@ -171,10 +166,10 @@ open class Family {
   private let spouses: [Person] = []
   fileprivate var members : [Person] = []
 
-  public init!(spouse1: Person, spouse2: Person) {
-    guard spouse1.spouse == nil && spouse2.spouse == nil else {
+  public init(spouse1: Person, spouse2: Person) {
+    if spouse1.spouse != nil || spouse2.spouse != nil {
       print("both spouses must be unmarried before creating a family")
-      return nil
+      return
     }
 
     spouse1.spouse = spouse2
