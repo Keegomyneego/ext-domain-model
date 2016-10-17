@@ -21,9 +21,18 @@ open class TestMe {
 }
 
 ////////////////////////////////////
+// Mathematics
+//
+
+protocol Mathematics {
+  static func +(lhs: Self, rhs: Self) -> Self
+  static func -(lhs: Self, rhs: Self) -> Self
+}
+
+////////////////////////////////////
 // Money
 //
-public struct Money : CustomStringConvertible {
+public struct Money : CustomStringConvertible, Mathematics {
   public var amount : Int
   public var currency : String {
     return _currency.rawValue
@@ -81,6 +90,14 @@ public struct Money : CustomStringConvertible {
 
     return Money(amount: Int(newAmount), currency: to.rawValue)
   }
+}
+
+func +(lhs: Money, rhs: Money) -> Money {
+  return rhs.add(lhs)
+}
+
+func -(lhs: Money, rhs: Money) -> Money {
+  return rhs.subtract(lhs)
 }
 
 ////////////////////////////////////
