@@ -92,5 +92,10 @@ class MoneyTests: XCTestCase {
     XCTAssert(total.amount == 10)
     XCTAssert(total.currency == "GBP")
   }
+
+  func testDescription() {
+    XCTAssert(fifteenCAN.description == "CAN15")
+    XCTAssert(fiveGBP.description == "GBP5")
+  }
 }
 
