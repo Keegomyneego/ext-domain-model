@@ -23,12 +23,16 @@ open class TestMe {
 ////////////////////////////////////
 // Money
 //
-public struct Money {
+public struct Money : CustomStringConvertible {
   public var amount : Int
   public var currency : String {
     return _currency.rawValue
   }
   private var _currency : Currency
+
+  public var description : String {
+    return "\(currency)\(amount)"
+  }
 
   public enum Currency : String {
     case CAN = "CAN"
@@ -82,9 +86,13 @@ public struct Money {
 ////////////////////////////////////
 // Job
 //
-open class Job {
+open class Job : CustomStringConvertible {
   fileprivate var title : String
   fileprivate var type : JobType
+
+  public var description : String {
+    return "\(title)"
+  }
 
   public enum JobType {
     case Hourly(Double)
@@ -118,10 +126,14 @@ open class Job {
 ////////////////////////////////////
 // Person
 //
-open class Person {
+open class Person : CustomStringConvertible {
   open var firstName : String = ""
   open var lastName : String = ""
   open var age : Int = 0
+
+  public var description : String {
+    return "\(firstName) \(lastName)"
+  }
 
   fileprivate var _job : Job? = nil
   open var job : Job? {
@@ -160,11 +172,15 @@ open class Person {
 ////////////////////////////////////
 // Family
 //
-open class Family {
+open class Family : CustomStringConvertible {
   private static let legalAge = 21
 
   private let spouses: [Person] = []
   fileprivate var members : [Person] = []
+
+  public var description : String {
+    return "The family of \(members)"
+  }
 
   public init(spouse1: Person, spouse2: Person) {
     if spouse1.spouse != nil || spouse2.spouse != nil {
