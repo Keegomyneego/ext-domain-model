@@ -107,5 +107,10 @@ class MoneyTests: XCTestCase {
     XCTAssert(tenGBP.amount == 10)
     XCTAssert(tenGBP.currency == "GBP")
   }
+
+  func testDouble() {
+    XCTAssert(10.0.CAN.description == "CAN10")
+    XCTAssert(2.0.USD.description == "USD2")
+  }
 }
 
